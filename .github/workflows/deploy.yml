@@ -1,0 +1,55 @@
+name: Deploy to GitHub Pages
+
+on:
+  # هيشتغل تلقائياً مع كل Push على فرع main
+  push:
+    branches: ['main']
+  # بيسمحلك تشغل الـ Action مانيوال من الموقع لو حبيت
+  workflow_dispatch:
+
+# تحديد الصلاحيات المطلوبة
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# منع تشغيل أكتر من Build في نفس الوقت
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
