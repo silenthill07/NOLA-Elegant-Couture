@@ -1,0 +1,6 @@
+{
+  "name": "Nola Elegant Couture",
+  "description": "A luxury fashion brand website featuring high-end couture, elegant designs, and artistic 3D visuals. Dual-language (AR/EN) support with a premium, feminine aesthetic.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
